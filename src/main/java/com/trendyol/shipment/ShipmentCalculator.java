@@ -24,11 +24,11 @@ public class ShipmentCalculator {
         return maxShipmentSize != null ? getNextShipmentSize(maxShipmentSize) : getLargestShipmentSize(shipmentSizeMap);
     }
 
-    private static boolean isBasketEmpty(List<Product> products) {
+    public static boolean isBasketEmpty(List<Product> products) {
         return products == null || products.isEmpty();
     }
 
-    private static Map<ShipmentSize, Long> countShipmentSizes(List<Product> products) {
+    public static Map<ShipmentSize, Long> countShipmentSizes(List<Product> products) {
         Map<ShipmentSize, Long> shipmentSizeMap = new HashMap<>();
 
         for (Product product : products) {
@@ -39,15 +39,15 @@ public class ShipmentCalculator {
         return shipmentSizeMap;
     }
 
-    private static boolean basketContainsLessThanThreshold(List<Product> products) {
+    public static boolean basketContainsLessThanThreshold(List<Product> products) {
         return products.size() < SAME_SIZE_THRESHOLD;
     }
 
-    private static ShipmentSize getLargestShipmentSize(Map<ShipmentSize, Long> shipmentSizeMap) {
+    public static ShipmentSize getLargestShipmentSize(Map<ShipmentSize, Long> shipmentSizeMap) {
         return Collections.max(shipmentSizeMap.keySet());
     }
 
-    private static ShipmentSize findMaxOccurringShipmentSize(Map<ShipmentSize, Long> shipmentSizeMap) {
+    public static ShipmentSize findMaxOccurringShipmentSize(Map<ShipmentSize, Long> shipmentSizeMap) {
         for (Map.Entry<ShipmentSize, Long> entry : shipmentSizeMap.entrySet()) {
             if (entry.getValue() >= SAME_SIZE_THRESHOLD) {
                 return entry.getKey();
@@ -56,7 +56,7 @@ public class ShipmentCalculator {
         return null;
     }
 
-    private static ShipmentSize getNextShipmentSize(ShipmentSize shipmentSize) {
+    public static ShipmentSize getNextShipmentSize(ShipmentSize shipmentSize) {
         int ordinal = shipmentSize.ordinal();
         if (ordinal < ShipmentSize.values().length - 1) {
             return ShipmentSize.values()[ordinal + 1];
