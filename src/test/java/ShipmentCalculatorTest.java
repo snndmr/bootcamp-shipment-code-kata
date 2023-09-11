@@ -22,20 +22,20 @@ public class ShipmentCalculatorTest {
 
     @Test
     void isBasketEmpty_EmptyBasket_ShouldReturnTrue() {
-        assertTrue(ShipmentCalculator.isBasketEmpty(products));
+        assertTrue(ShipmentCalculator.isBasketNullOrEmpty(products));
     }
 
     @Test
     void isBasketEmpty_NonEmptyBasket_ShouldReturnFalse() {
         products.add(Product.create(ShipmentSize.SMALL));
-        assertFalse(ShipmentCalculator.isBasketEmpty(products));
+        assertFalse(ShipmentCalculator.isBasketNullOrEmpty(products));
     }
 
     @Test
     void countShipmentSizes_ShouldCountSizesCorrectly() {
         products.addAll(Arrays.asList(Product.create(ShipmentSize.SMALL), Product.create(ShipmentSize.MEDIUM), Product.create(ShipmentSize.LARGE), Product.create(ShipmentSize.SMALL)));
 
-        Map<ShipmentSize, Long> shipmentSizeMap = ShipmentCalculator.countShipmentSizes(products);
+        Map<ShipmentSize, Integer> shipmentSizeMap = ShipmentCalculator.countShipmentSizes(products);
 
         assertEquals(2, shipmentSizeMap.get(ShipmentSize.SMALL));
         assertEquals(1, shipmentSizeMap.get(ShipmentSize.MEDIUM));
@@ -59,7 +59,7 @@ public class ShipmentCalculatorTest {
 
     @Test
     void getLargestShipmentSize_ShouldReturnLargestSize() {
-        Map<ShipmentSize, Long> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 3L, ShipmentSize.MEDIUM, 2L, ShipmentSize.LARGE, 1L);
+        Map<ShipmentSize, Integer> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 3, ShipmentSize.MEDIUM, 2, ShipmentSize.LARGE, 1);
 
         ShipmentSize largestSize = ShipmentCalculator.getLargestShipmentSize(shipmentSizeMap);
 
@@ -68,7 +68,7 @@ public class ShipmentCalculatorTest {
 
     @Test
     void findMaxOccurringShipmentSize_ShouldReturnMaxOccurringSize() {
-        Map<ShipmentSize, Long> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 2L, ShipmentSize.MEDIUM, 3L, ShipmentSize.LARGE, 1L);
+        Map<ShipmentSize, Integer> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 2, ShipmentSize.MEDIUM, 3, ShipmentSize.LARGE, 1);
 
         ShipmentSize maxOccurringSize = ShipmentCalculator.findMaxOccurringShipmentSize(shipmentSizeMap);
 
@@ -77,7 +77,7 @@ public class ShipmentCalculatorTest {
 
     @Test
     void findMaxOccurringShipmentSize_NoneAboveThresholdWithEqualCounts_ShouldReturnNull() {
-        Map<ShipmentSize, Long> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 2L, ShipmentSize.MEDIUM, 2L, ShipmentSize.LARGE, 2L);
+        Map<ShipmentSize, Integer> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 2, ShipmentSize.MEDIUM, 2, ShipmentSize.LARGE, 2);
 
         ShipmentSize maxOccurringSize = ShipmentCalculator.findMaxOccurringShipmentSize(shipmentSizeMap);
 
