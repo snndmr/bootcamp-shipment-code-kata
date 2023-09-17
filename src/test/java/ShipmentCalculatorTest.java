@@ -4,14 +4,11 @@ import com.trendyol.shipment.ShipmentSize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShipmentCalculatorTest {
+class ShipmentCalculatorTest {
 
     private List<Product> products;
 
@@ -70,18 +67,19 @@ public class ShipmentCalculatorTest {
     void findMaxOccurringShipmentSize_ShouldReturnMaxOccurringSize() {
         Map<ShipmentSize, Integer> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 2, ShipmentSize.MEDIUM, 3, ShipmentSize.LARGE, 1);
 
-        ShipmentSize maxOccurringSize = ShipmentCalculator.findMaxOccurringShipmentSize(shipmentSizeMap);
+        Optional<ShipmentSize> maxOccurringSize = ShipmentCalculator.findMaxOccurringShipmentSize(shipmentSizeMap);
 
-        assertEquals(ShipmentSize.MEDIUM, maxOccurringSize);
+        assertTrue(maxOccurringSize.isPresent());
+        assertEquals(ShipmentSize.MEDIUM, maxOccurringSize.get());
     }
 
     @Test
-    void findMaxOccurringShipmentSize_NoneAboveThresholdWithEqualCounts_ShouldReturnNull() {
+    void findMaxOccurringShipmentSize_NoneAboveThresholdWithEqualCounts_ShouldReturnEmptyOptional() {
         Map<ShipmentSize, Integer> shipmentSizeMap = Map.of(ShipmentSize.SMALL, 2, ShipmentSize.MEDIUM, 2, ShipmentSize.LARGE, 2);
 
-        ShipmentSize maxOccurringSize = ShipmentCalculator.findMaxOccurringShipmentSize(shipmentSizeMap);
+        Optional<ShipmentSize> maxOccurringSize = ShipmentCalculator.findMaxOccurringShipmentSize(shipmentSizeMap);
 
-        assertNull(maxOccurringSize);
+        assertFalse(maxOccurringSize.isPresent());
     }
 
     @Test

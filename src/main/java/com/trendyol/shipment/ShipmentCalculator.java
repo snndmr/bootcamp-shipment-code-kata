@@ -1,17 +1,16 @@
 package com.trendyol.shipment;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShipmentCalculator {
     private static final int SAME_SIZE_THRESHOLD = 3;
 
+    private ShipmentCalculator() {}
+
     public static ShipmentSize calculateShipmentSize(List<Product> products) {
         if (isBasketNullOrEmpty(products)) {
-            throw new ShipmentCalculationException("Basket is empty.");
+            throw new NoProductsOnBasketException();
         }
 
         Map<ShipmentSize, Integer> shipmentSizeMap = countShipmentSizes(products);
@@ -20,9 +19,9 @@ public class ShipmentCalculator {
             return getLargestShipmentSize(shipmentSizeMap);
         }
 
-        ShipmentSize maxShipmentSize = findMaxOccurringShipmentSize(shipmentSizeMap);
-
-        return maxShipmentSize != null ? getNextShipmentSize(maxShipmentSize) : getLargestShipmentSize(shipmentSizeMap);
+        return findMaxOccurringShipmentSize(shipmentSizeMap)
+                .map(ShipmentCalculator::getNextShipmentSize)
+                .orElse(getLargestShipmentSize(shipmentSizeMap));
     }
 
     public static boolean isBasketNullOrEmpty(List<Product> products) {
@@ -42,12 +41,11 @@ public class ShipmentCalculator {
         return Collections.max(shipmentSizeMap.keySet());
     }
 
-    public static ShipmentSize findMaxOccurringShipmentSize(Map<ShipmentSize, Integer> shipmentSizeMap) {
+    public static Optional<ShipmentSize> findMaxOccurringShipmentSize(Map<ShipmentSize, Integer> shipmentSizeMap) {
         return shipmentSizeMap.entrySet().stream()
                 .filter(entry -> entry.getValue() >= SAME_SIZE_THRESHOLD)
                 .map(Map.Entry::getKey)
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public static ShipmentSize getNextShipmentSize(ShipmentSize shipmentSize) {
